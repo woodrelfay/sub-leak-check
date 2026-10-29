@@ -1,7 +1,7 @@
 {
   "pages": ["pages/index/index"],
   "window": {
-    "navigationBarTitleText": "订阅体检助手",
+    "navigationBarTitleText": "订了个啥",
     "navigationBarBackgroundColor": "#0f766e",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#f6faf8"

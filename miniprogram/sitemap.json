@@ -1,1 +1,1 @@
-{ "desc": "订阅体检助手", "rules": [{ "action": "allow", "page": "*" }] }
+{ "desc": "订了个啥", "rules": [{ "action": "allow", "page": "*" }] }

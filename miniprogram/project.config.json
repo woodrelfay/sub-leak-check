@@ -1,5 +1,5 @@
 {
-  "description": "订阅体检助手（sub-leak-check 小程序版）：账单仅在本机解析，不上传",
+  "description": "订了个啥（sub-leak-check 小程序版）：账单仅在本机解析，不上传",
   "appid": "touristappid",
   "projectname": "sub-leak-check",
   "compileType": "miniprogram",

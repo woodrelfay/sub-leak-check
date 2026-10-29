@@ -116,7 +116,7 @@ Page({
       });
       ctx.fillStyle = "#1d2b26"; ctx.fillRect(0, H - 170, W, 170);
       ctx.fillStyle = "#ffffff"; ctx.font = "700 36px sans-serif";
-      ctx.fillText("订阅体检助手 · sub-leak-check", 64, H - 96);
+      ctx.fillText("订了个啥 · sub-leak-check", 64, H - 96);
       ctx.font = "400 28px sans-serif"; ctx.fillStyle = "#b9cdc4";
       ctx.fillText("账单全程未离开我的手机 · 你也来测测多扣了多少", 64, H - 46);
       this._canvas = canvas;
@@ -139,6 +139,6 @@ Page({
   },
 
   onShareAppMessage: function () {
-    return { title: "订阅体检助手：查查你的自动续费多扣了多少（本地计算不上传）", path: "/pages/index/index" };
+    return { title: "订了个啥：查查你的自动续费多扣了多少（本地计算不上传）", path: "/pages/index/index" };
   }
 });
