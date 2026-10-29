@@ -3,30 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>订阅漏钱体检 · 你的自动续费一年扣了多少？</title>
-<meta name="description" content="把微信/支付宝账单拖进来，本地算出你的自动续费清单和疑似漏钱金额。账单只在你的浏览器里解析，不上传任何服务器。">
+<title>订阅体检报告 · 你的自动续费一年扣了多少？</title>
+<meta name="description" content="把微信/支付宝账单拖进来，在你自己的浏览器里本地算出自动续费清单和疑似多扣金额。不上传、无后端、无第三方资源，附自证方法与离线版。">
 <style>
-  :root{ --ink:#26221c; --red:#d93a2b; --paper:#fff7ea; --card:#ffffff; --line:#e8dcc4; --mut:#8a7f6a; }
+  :root{ --ink:#1d2b26; --teal:#0f766e; --teal-d:#0b5a54; --bg:#f6faf8; --card:#ffffff; --line:#dce8e2; --mut:#6b7d75; --red:#c93a2a; }
   *{ box-sizing:border-box; }
-  body{ margin:0; font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; background:var(--paper); color:var(--ink); }
-  .wrap{ max-width:860px; margin:0 auto; padding:28px 18px 60px; }
-  h1{ font-size:34px; margin:6px 0 4px; letter-spacing:1px; }
-  h1 .red{ color:var(--red); }
-  .sub{ color:var(--mut); font-size:15px; margin:0 0 6px; line-height:1.7; }
-  .privacy{ display:inline-block; background:#eaf7ec; color:#22703a; border:1px solid #bfe6c8; border-radius:999px; padding:3px 12px; font-size:13px; margin:8px 0 18px; }
-  #drop{ border:2.5px dashed #d8c193; border-radius:18px; background:#fffdf6; padding:44px 20px; text-align:center; cursor:pointer; transition:.15s; }
-  #drop:hover, #drop.over{ border-color:var(--red); background:#fff3ec; }
-  #drop .big{ font-size:20px; font-weight:700; }
+  body{ margin:0; font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--ink); }
+  .wrap{ max-width:860px; margin:0 auto; padding:30px 18px 60px; }
+  .brand{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  h1{ font-size:32px; margin:0; letter-spacing:1px; }
+  h1 .teal{ color:var(--teal); }
+  .ver{ color:var(--mut); font-size:13px; }
+  .sub{ color:var(--mut); font-size:15px; margin:10px 0 0; line-height:1.75; }
+  .trustbar{ display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 20px; }
+  .chip{ background:#e7f4ef; color:var(--teal-d); border:1px solid #c4e2d8; border-radius:999px; padding:4px 13px; font-size:13px; font-weight:600; }
+  #modeBar{ display:none; border-radius:12px; padding:10px 16px; font-size:14px; margin-bottom:14px; }
+  #modeBar.demo{ display:block; background:#fdf6e0; border:1px solid #eed9a0; color:#7a5d10; }
+  #modeBar.mine{ display:block; background:#e7f4ef; border:1px solid #c4e2d8; color:var(--teal-d); }
+  #drop{ border:2px dashed #9fc6ba; border-radius:16px; background:#ffffff; padding:34px 20px; text-align:center; cursor:pointer; transition:.15s; }
+  #drop:hover, #drop.over{ border-color:var(--teal); background:#eef7f3; }
+  #drop .big{ font-size:19px; font-weight:700; }
   #drop .small{ color:var(--mut); font-size:13px; margin-top:8px; line-height:1.8; }
   .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
   button{ font:inherit; border:0; border-radius:12px; padding:12px 20px; cursor:pointer; font-weight:700; }
-  .btn-main{ background:var(--red); color:#fff; }
+  .btn-main{ background:var(--teal); color:#fff; }
   .btn-ghost{ background:#fff; border:1.5px solid var(--line); color:var(--ink); }
-  details{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 18px; margin-top:14px; }
-  summary{ font-weight:700; cursor:pointer; }
-  details ol{ margin:10px 0 4px; padding-left:20px; line-height:2; font-size:14px; color:#4c463c; }
+  section.box{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-top:16px; }
+  section.box h2{ font-size:18px; margin:0 0 8px; }
+  section.box p, section.box li{ font-size:14.5px; line-height:1.9; color:#3d4f47; }
+  section.box ol{ margin:6px 0; padding-left:20px; }
+  .warn{ background:#fdecea; border:1px solid #f0c4bd; color:#8f2b1e; border-radius:12px; padding:12px 16px; font-size:14.5px; font-weight:600; margin-top:16px; line-height:1.8; }
+  details{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:13px 18px; margin-top:12px; }
+  summary{ font-weight:700; cursor:pointer; font-size:15px; }
+  details div{ font-size:14px; line-height:1.9; color:#3d4f47; padding-top:8px; }
+  details ol{ margin:6px 0; padding-left:20px; line-height:2; font-size:14px; color:#3d4f47; }
   #err{ display:none; background:#fdecea; color:#a12; border:1px solid #f3c1bb; border-radius:12px; padding:12px 16px; margin-top:16px; font-size:14px; }
-  #result{ display:none; margin-top:26px; }
+  #result{ margin-top:24px; }
   .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
   .stat{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px; }
   .stat .k{ color:var(--mut); font-size:13px; }
@@ -34,66 +46,52 @@
   .stat .v.red{ color:var(--red); }
   .stat .d{ color:var(--mut); font-size:12px; margin-top:4px; line-height:1.6; }
   table{ width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; margin-top:14px; font-size:14px; }
-  th,td{ padding:11px 12px; text-align:left; border-bottom:1px solid #f0e7d2; vertical-align:top; }
-  th{ background:#fdf3da; font-size:13px; }
+  th,td{ padding:11px 12px; text-align:left; border-bottom:1px solid #eef3f0; vertical-align:top; }
+  th{ background:#eef6f2; font-size:13px; }
   tr:last-child td{ border-bottom:0; }
   .flag{ display:inline-block; background:#fdecea; color:#b3271a; border-radius:6px; padding:1px 7px; font-size:12px; margin:1px 2px 1px 0; }
-  .flag.gray{ background:#f1ead9; color:#6d6350; }
+  .flag.gray{ background:#eef1ec; color:#5f7268; }
   .howto{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px 18px; margin-top:14px; font-size:14px; line-height:1.9; }
-  .howto b{ color:var(--red); }
+  .howto b{ color:var(--teal-d); }
   #cardBox{ margin-top:20px; text-align:center; }
-  #card{ width:min(360px,90vw); border-radius:14px; box-shadow:0 8px 30px rgba(90,60,0,.18); }
-  .foot{ color:var(--mut); font-size:12.5px; line-height:1.9; margin-top:30px; border-top:1px solid var(--line); padding-top:14px; }
-  @media (max-width:640px){ .stats{ grid-template-columns:1fr; } h1{ font-size:27px; } }
+  #card{ width:min(360px,90vw); border-radius:14px; box-shadow:0 8px 30px rgba(20,60,50,.16); }
+  .author{ display:flex; gap:14px; align-items:flex-start; }
+  .author .face{ font-size:34px; }
+  .foot{ color:var(--mut); font-size:12.5px; line-height:1.9; margin-top:26px; border-top:1px solid var(--line); padding-top:14px; }
+  a{ color:var(--teal-d); }
+  @media (max-width:640px){ .stats{ grid-template-columns:1fr; } h1{ font-size:26px; } }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>订阅<span class="red">漏钱</span>体检</h1>
-  <p class="sub">视频会员开了两个？网盘续了三年没打开过？音乐 App 早卸载了还在扣？<br>把账单拖进来，算算你的自动续费一年到底漏了多少钱。</p>
-  <span class="privacy">🔒 账单只在你自己的浏览器里解析，不上传、不联网、我们看不到</span>
-
-  <div id="drop">
-    <div class="big">把微信 / 支付宝账单（.csv）拖到这里</div>
-    <div class="small">或点击选择文件，可多选（比如微信 + 支付宝各一份）<br>压缩包（.zip）请先在电脑上解压，再拖里面的 .csv；解压密码在「微信支付」公众号的消息里</div>
-  </div>
-  <input type="file" id="file" accept=".csv,text/csv" multiple hidden>
-  <div class="row">
-    <button class="btn-main" id="pick">选择账单文件</button>
-    <button class="btn-ghost" id="demo">没有账单？先用示例账单看效果</button>
+  <div class="brand"><h1>订阅<span class="teal">体检报告</span></h1><span class="ver">sub-leak-check · v0.1.1 · 开源免费</span></div>
+  <p class="sub">视频会员开了两个？网盘续了很久没打开过？把微信 / 支付宝账单拖进来，在你自己的浏览器里算一算：你的自动续费一共多少、哪些疑似在白扣。</p>
+  <div class="trustbar">
+    <span class="chip">✓ 不上传：计算只在你的浏览器里</span>
+    <span class="chip">✓ 无后端、无统计、无广告</span>
+    <span class="chip">✓ 不加载任何第三方资源</span>
+    <span class="chip">✓ 代码全开源，可自查</span>
   </div>
 
-  <details>
-    <summary>账单怎么导出？（微信 / 支付宝各 1 分钟）</summary>
-    <ol>
-      <li><b>微信</b>：关注「微信支付」公众号 → 底部菜单「我的账单」→「账单下载」→ 用途选「个人对账」→ 选时间段 → 邮箱收到带密码的压缩包，密码在公众号消息里 → 电脑上解压出 .csv</li>
-      <li><b>支付宝</b>：电脑打开支付宝官网登录 →「交易记录」→「下载账单」选 .csv 格式；或 App 内「账单」页右上角申请开具交易流水证明</li>
-      <li>时间段建议选满 12 个月，扣得越久越看得出规律</li>
-    </ol>
-  </details>
-
-  <div id="err"></div>
+  <div id="modeBar"></div>
 
   <div id="result">
     <div class="stats">
       <div class="stat"><div class="k">识别出的自动续费</div><div class="v" id="stCount">–</div><div class="d">按固定周期重复扣款识别，含月付与年付</div></div>
       <div class="stat"><div class="k">持续扣费总额（账单期）</div><div class="v" id="stAll">–</div><div class="d">所有订阅加起来已经扣掉的钱</div></div>
-      <div class="stat"><div class="k">疑似漏钱</div><div class="v red" id="stSuspect">–</div><div class="d">同品类重复订阅 + 悄悄涨价多收的部分（估算，请逐条确认）</div></div>
+      <div class="stat"><div class="k">疑似多扣（请逐条确认）</div><div class="v red" id="stSuspect">–</div><div class="d">同品类重复订阅 + 悄悄涨价多收的部分（估算）</div></div>
     </div>
-
     <table>
       <thead><tr><th>订阅</th><th>品类</th><th>扣了多久</th><th>累计</th><th>标记</th></tr></thead>
       <tbody id="tbody"></tbody>
     </table>
-
     <div class="howto">
       <b>确认不用了，去哪关？</b><br>
       微信扣的：微信「我 → 服务 → 钱包 → 支付设置 → 自动续费」逐个关闭<br>
       支付宝扣的：支付宝「我的 → 设置 → 支付设置 → 免密支付/自动扣款」逐个关闭<br>
       苹果扣的：iPhone「设置 → 你的名字 → 订阅」里取消<br>
-      本工具只看账单、做体检，不替你取消任何订阅——关之前看清楚，别把在用的也关了
+      本工具只做体检，不替你取消任何订阅——关之前看清楚，别把在用的也关了
     </div>
-
     <div id="cardBox">
       <p class="sub">把结果做成一张卡，晒给朋友提醒他们也查一查 👇</p>
       <canvas id="card" width="1080" height="1440"></canvas>
@@ -103,9 +101,63 @@
     </div>
   </div>
 
+  <div id="drop" style="margin-top:26px">
+    <div class="big">换成你自己的账单：把 .csv 拖到这里</div>
+    <div class="small">或点击选择文件，可多选（比如微信 + 支付宝各一份）<br>压缩包（.zip）请先在你自己的电脑上解压，再拖里面的 .csv —— 解压密码只在你手里，全程不需要输入到任何网页</div>
+  </div>
+  <input type="file" id="file" accept=".csv,text/csv" multiple hidden>
+  <div class="row">
+    <button class="btn-main" id="pick">选择我的账单文件</button>
+    <button class="btn-ghost" id="demo">回到示例报告</button>
+  </div>
+  <div id="err"></div>
+
+  <section class="box">
+    <h2>🔍 不放心？你可以这样亲手验我</h2>
+    <p>「不上传」不能靠我嘴上说，给你三招自证，任选其一：</p>
+    <ol>
+      <li><b>断网测</b>：先打开本页，然后关掉 Wi-Fi / 开飞行模式，再拖入你的账单。能正常出报告，就证明计算没经过任何服务器</li>
+      <li><b>看网络面板</b>：电脑浏览器按 F12 打开「网络（Network）」面板，再拖入账单——全程不会新增任何请求，本页连统计和字体都是本地的</li>
+      <li><b>用离线版</b>：到 GitHub 仓库的 Releases 下载离线版 zip，解压后断网双击 index.html 使用，和在线版是同一套代码</li>
+    </ol>
+    <p>另外，本页的全部代码就是 GitHub 仓库里的那几个文件，页面和仓库逐字一致，会看代码的朋友可以对照审查。</p>
+  </section>
+
+  <div class="warn">⚠️ 本站永远不会让你输入任何密码、验证码、支付信息或登录账号。如果哪个页面打着本工具的名义向你索要这些信息，那一定是假冒页面，请立即关闭。</div>
+
+  <details>
+    <summary>账单怎么导出？（微信 / 支付宝各 1 分钟）</summary>
+    <div>
+      <ol>
+        <li><b>微信</b>：关注「微信支付」公众号 → 底部菜单「我的账单」→「账单下载」→ 用途选「个人对账」→ 选时间段 → 邮箱收到带密码的压缩包，密码在公众号消息里 → 在你自己电脑上解压出 .csv</li>
+        <li><b>支付宝</b>：电脑打开支付宝官网登录 →「交易记录」→「下载账单」选 .csv 格式；或 App 内「账单」页申请交易流水证明</li>
+        <li>时间段建议选满 12 个月，扣得越久越看得出规律</li>
+      </ol>
+    </div>
+  </details>
+
+  <details>
+    <summary>常见问题：数据存哪？为什么免费？准不准？</summary>
+    <div>
+      <b>我的账单数据存到哪了？</b>只存在你浏览器当前页面的内存里，关掉页面就消失。本站没有服务器，没有数据库，没有账号系统，想存也无处存。<br>
+      <b>为什么免费？</b>作者自己被自动续费坑过，做了自用，顺手开源。代码托管在 GitHub，零运营成本，不需要靠你的数据挣钱。<br>
+      <b>「疑似多扣」准不准？</b>它是按固定规则的估算：同品类重复订阅 + 涨价多收的差价。账单只能证明「在扣费」，证明不了「你没在用」，所以请逐条确认后再关。<br>
+      <b>苹果订阅的账单在哪？</b>苹果订阅多经微信/支付宝扣款，一般已包含在账单里；明细可在 iPhone「设置 → 订阅」里核对。
+    </div>
+  </details>
+
+  <section class="box author">
+    <div class="face">🖥️💤</div>
+    <div>
+      <h2 style="margin-bottom:4px">关于作者</h2>
+      <p style="margin:0">「会做梦的服务器」——一个做运营的，日常被各种自动续费教育，干脆写了这个工具自查自纠。工具开源在 GitHub（仓库名 sub-leak-check），有识别不出的订阅、或者对结果有疑问，欢迎到仓库提 Issue，词典会持续补。<br>
+      仓库地址：<a href="https://github.com/woodrelfay/sub-leak-check" target="_blank" rel="noopener">github.com/woodrelfay/sub-leak-check</a></p>
+    </div>
+  </section>
+
   <p class="foot">
-    口径说明：「疑似漏钱」= 同一品类的重复订阅（保留最近单价最高的一个，其余计入）+ 涨价后每笔多收的差价累加，是估算值，不是定性结论，最终以你逐条确认为准。识别基于账单内固定周期重复扣款，个别一次性消费可能被误判，请以标记为参考。<br>
-    开源项目 sub-leak-check · 全部计算在本地完成 · 示例账单为虚构数据
+    口径说明：「疑似多扣」= 同一品类的重复订阅（保留最近单价最高的一个，其余计入）+ 涨价后每笔多收的差价累加，是估算值，不是定性结论，最终以你逐条确认为准。识别基于账单内固定周期重复扣款，个别一次性消费可能被误判，请以标记为参考。<br>
+    sub-leak-check v0.1.1 · MIT 开源 · 示例账单为虚构数据 · 本页不使用 Cookie
   </p>
 </div>
 <script src="core.js"></script>

@@ -5,7 +5,19 @@
   var SL = window.SubLeak;
   var drop = document.getElementById("drop"), fileInput = document.getElementById("file");
   var errBox = document.getElementById("err"), result = document.getElementById("result");
-  var allTxns = [], lastReport = null, lastRange = null;
+  var allTxns = [], lastReport = null, lastRange = null, mode = "demo";
+  var modeBar = document.getElementById("modeBar");
+
+  function setMode(m) {
+    mode = m;
+    if (m === "demo") {
+      modeBar.className = "demo";
+      modeBar.textContent = "📋 你正在看的是【示例报告】——用一份虚构账单算出来的，方便你先看清这工具是干嘛的。往下拖入你自己的账单，就会换成你的结果";
+    } else {
+      modeBar.className = "mine";
+      modeBar.textContent = "✅ 这是你自己的账单结果，刚刚在你这台设备上本地算完。关掉页面，数据就没了";
+    }
+  }
 
   function showErr(msg) { errBox.textContent = msg; errBox.style.display = "block"; }
   function hideErr() { errBox.style.display = "none"; }
@@ -32,6 +44,7 @@
     if (!allTxns.length) { if (failed.length) showErr(failed.join("；")); return; }
     if (failed.length) showErr("部分文件没读成（" + failed.join("；") + "），先用读成的部分体检");
     allTxns.sort(function (a, b) { return a.date - b.date; });
+    setMode("mine");
     render();
   }
 
@@ -59,9 +72,8 @@
         "<td><b>" + SL.fmtMoney(s.total) + "</b></td><td>" + (flags || "—") + "</td>";
       tb.appendChild(tr);
     });
-    result.style.display = "block";
     drawCard(report, lastRange);
-    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (mode === "mine") result.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -70,22 +82,22 @@
   function drawCard(report, range) {
     var cv = document.getElementById("card"), ctx = cv.getContext("2d");
     var W = 1080, H = 1440;
-    ctx.fillStyle = "#fff7ea"; ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = "#d93a2b"; ctx.fillRect(0, 0, W, 190);
+    ctx.fillStyle = "#f6faf8"; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#0f766e"; ctx.fillRect(0, 0, W, 190);
     ctx.fillStyle = "#ffffff"; ctx.textAlign = "left";
     ctx.font = "800 64px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
-    ctx.fillText("我的订阅漏钱体检", 64, 96);
+    ctx.fillText("我的订阅体检报告", 64, 96);
     ctx.font = "400 30px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
     ctx.fillText("账单期 " + SL.fmtDate(range.from) + " ~ " + SL.fmtDate(range.to) + " · 共识别 " + report.subCount + " 个自动续费", 64, 152);
 
-    ctx.fillStyle = "#8a7f6a"; ctx.font = "400 34px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
-    ctx.fillText("疑似漏钱（重复订阅 + 悄悄涨价）", 64, 300);
-    ctx.fillStyle = "#d93a2b"; ctx.font = "800 130px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
+    ctx.fillStyle = "#6b7d75"; ctx.font = "400 34px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
+    ctx.fillText("疑似多扣（重复订阅 + 悄悄涨价）", 64, 300);
+    ctx.fillStyle = "#c93a2a"; ctx.font = "800 130px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
     ctx.fillText(SL.fmtMoney(report.suspectTotal), 60, 440);
-    ctx.fillStyle = "#26221c"; ctx.font = "400 36px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
+    ctx.fillStyle = "#1d2b26"; ctx.font = "400 36px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
     ctx.fillText("持续扣费总额 " + SL.fmtMoney(report.allTotal) + "，逐条确认后再关", 64, 520);
 
-    ctx.strokeStyle = "#e8dcc4"; ctx.lineWidth = 2;
+    ctx.strokeStyle = "#dce8e2"; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(64, 570); ctx.lineTo(W - 64, 570); ctx.stroke();
 
     var y = 660;
@@ -93,25 +105,25 @@
     ctx.fillStyle = "#26221c"; ctx.fillText("扣得最多的 5 个", 64, y); y += 66;
     report.subscriptions.slice(0, 5).forEach(function (s, i) {
       ctx.font = "400 38px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
-      ctx.fillStyle = "#26221c";
+      ctx.fillStyle = "#1d2b26";
       ctx.fillText((i + 1) + ". " + s.name, 64, y);
       ctx.textAlign = "right";
       ctx.font = "700 38px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
       ctx.fillText(SL.fmtMoney(s.total), W - 64, y);
       ctx.textAlign = "left";
       ctx.font = "400 28px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
-      ctx.fillStyle = "#8a7f6a";
+      ctx.fillStyle = "#6b7d75";
       var tag = s.flags.length ? s.flags.join(" · ") : s.cadence;
       ctx.fillText(s.monthCount + " 个月 · " + tag, 96, y + 44);
       y += 118;
     });
 
-    ctx.fillStyle = "#26221c"; ctx.fillRect(0, H - 170, W, 170);
+    ctx.fillStyle = "#1d2b26"; ctx.fillRect(0, H - 170, W, 170);
     ctx.fillStyle = "#ffffff"; ctx.font = "700 36px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
-    ctx.fillText("订阅漏钱体检 · sub-leak-check", 64, H - 96);
+    ctx.fillText("订阅体检报告 · sub-leak-check", 64, H - 96);
     ctx.font = "400 28px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
-    ctx.fillStyle = "#cfc4ab";
-    ctx.fillText("账单全程未离开我的浏览器 · 你也来测测漏了多少", 64, H - 46);
+    ctx.fillStyle = "#b9cdc4";
+    ctx.fillText("账单全程未离开我的浏览器 · 你也来测测多扣了多少", 64, H - 46);
   }
 
   drop.addEventListener("click", function () { fileInput.click(); });
@@ -120,13 +132,15 @@
   ["dragover", "dragenter"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add("over"); }); });
   ["dragleave", "drop"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove("over"); }); });
   drop.addEventListener("drop", function (e) { if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files); });
-  document.getElementById("demo").addEventListener("click", function () {
-    hideErr();
+  function loadDemo() {
     allTxns = window.DEMO_TXNS.map(function (t) {
       return { date: new Date(t.date.replace(" ", "T")), counterparty: t.counterparty, product: t.product, direction: t.direction, amount: t.amount, source: t.source };
     });
+    setMode("demo");
     render();
-  });
+  }
+  document.getElementById("demo").addEventListener("click", function () { hideErr(); loadDemo(); });
+  loadDemo(); /* 默认第一屏就是示例报告：先看清价值，再决定要不要拖自己的账单 */
   document.getElementById("dlCard").addEventListener("click", function () {
     var a = document.createElement("a");
     a.download = "订阅漏钱体检报告卡.png";
