@@ -1,0 +1,41 @@
+page{ background:#f6faf8; color:#1d2b26; font-family:-apple-system,"PingFang SC",sans-serif; }
+.wrap{ padding:28rpx 30rpx 70rpx; }
+.brand{ font-size:52rpx; font-weight:800; letter-spacing:1rpx; }
+.teal{ color:#0f766e; }
+.sub{ color:#6b7d75; font-size:28rpx; line-height:1.75; margin-top:14rpx; }
+.sub.center{ text-align:center; }
+.chips{ display:flex; flex-wrap:wrap; gap:12rpx; margin:20rpx 0 8rpx; }
+.chip{ background:#e7f4ef; color:#0b5a54; border:1rpx solid #c4e2d8; border-radius:999rpx; padding:6rpx 20rpx; font-size:24rpx; font-weight:600; }
+.bar{ border-radius:16rpx; padding:18rpx 22rpx; font-size:26rpx; line-height:1.7; margin:18rpx 0 6rpx; }
+.bar.demo{ background:#fdf6e0; border:1rpx solid #eed9a0; color:#7a5d10; }
+.bar.mine{ background:#e7f4ef; border:1rpx solid #c4e2d8; color:#0b5a54; }
+.stats{ display:flex; flex-direction:column; gap:16rpx; margin-top:18rpx; }
+.stat{ background:#fff; border:1rpx solid #dce8e2; border-radius:20rpx; padding:24rpx 28rpx; }
+.stat .k{ color:#6b7d75; font-size:25rpx; }
+.stat .v{ font-size:52rpx; font-weight:800; margin-top:6rpx; }
+.stat .v.red{ color:#c93a2a; }
+.table{ background:#fff; border:1rpx solid #dce8e2; border-radius:20rpx; margin-top:18rpx; overflow:hidden; }
+.tr{ display:flex; padding:20rpx 24rpx; border-bottom:1rpx solid #eef3f0; align-items:flex-start; }
+.tr.head{ background:#eef6f2; font-size:25rpx; font-weight:700; }
+.tr:last-child{ border-bottom:0; }
+.c1{ flex:1; padding-right:12rpx; }
+.c2{ width:170rpx; font-size:25rpx; color:#3d4f47; white-space:pre-line; }
+.c3{ width:150rpx; text-align:right; font-weight:700; font-size:28rpx; }
+.nm{ font-weight:700; font-size:29rpx; }
+.lt{ color:#6b7d75; font-size:23rpx; margin-top:4rpx; }
+.flags{ margin-top:8rpx; }
+.flag{ display:inline-block; background:#fdecea; color:#b3271a; border-radius:8rpx; padding:2rpx 12rpx; font-size:22rpx; margin:2rpx 8rpx 2rpx 0; }
+.flag.gray{ background:#eef1ec; color:#5f7268; }
+.box{ background:#fff; border:1rpx solid #dce8e2; border-radius:20rpx; padding:24rpx 28rpx; margin-top:18rpx; }
+.bt{ font-weight:700; font-size:29rpx; margin-bottom:8rpx; }
+.bl{ font-size:26rpx; line-height:1.9; color:#3d4f47; }
+.cardbox{ text-align:center; margin-top:26rpx; }
+.card{ width:540rpx; height:720rpx; margin:16rpx auto; border-radius:16rpx; box-shadow:0 8rpx 30rpx rgba(20,60,50,.16); background:#f6faf8; }
+.btn{ border-radius:16rpx; font-weight:700; margin-top:18rpx; }
+.btn.main{ background:#0f766e; color:#fff; }
+.btn.main.big{ font-size:32rpx; padding:10rpx 0; margin-top:34rpx; }
+.btn.ghost{ background:#fff; border:1.5px solid #dce8e2; color:#1d2b26; }
+.err{ background:#fdecea; color:#a11212; border:1rpx solid #f3c1bb; border-radius:14rpx; padding:16rpx 20rpx; font-size:25rpx; margin-top:16rpx; line-height:1.7; }
+.hint{ color:#6b7d75; font-size:24rpx; line-height:1.8; margin-top:16rpx; }
+.warn{ background:#fdecea; border:1rpx solid #f0c4bd; color:#8f2b1e; border-radius:16rpx; padding:20rpx 24rpx; font-size:27rpx; font-weight:600; margin-top:18rpx; line-height:1.8; }
+.foot{ color:#6b7d75; font-size:23rpx; line-height:1.9; margin-top:30rpx; border-top:1rpx solid #dce8e2; padding-top:16rpx; }
