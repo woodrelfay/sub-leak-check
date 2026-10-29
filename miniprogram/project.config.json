@@ -1,6 +1,6 @@
 {
   "description": "订了个啥（sub-leak-check 小程序版）：账单仅在本机解析，不上传",
-  "appid": "touristappid",
+  "appid": "wx84fbc42d93d4936b",
   "projectname": "sub-leak-check",
   "compileType": "miniprogram",
   "libVersion": "3.5.0",
