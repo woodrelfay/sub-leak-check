@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>订阅漏钱体检 · 你的自动续费一年扣了多少？</title>
+<meta name="description" content="把微信/支付宝账单拖进来，本地算出你的自动续费清单和疑似漏钱金额。账单只在你的浏览器里解析，不上传任何服务器。">
+<style>
+  :root{ --ink:#26221c; --red:#d93a2b; --paper:#fff7ea; --card:#ffffff; --line:#e8dcc4; --mut:#8a7f6a; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; background:var(--paper); color:var(--ink); }
+  .wrap{ max-width:860px; margin:0 auto; padding:28px 18px 60px; }
+  h1{ font-size:34px; margin:6px 0 4px; letter-spacing:1px; }
+  h1 .red{ color:var(--red); }
+  .sub{ color:var(--mut); font-size:15px; margin:0 0 6px; line-height:1.7; }
+  .privacy{ display:inline-block; background:#eaf7ec; color:#22703a; border:1px solid #bfe6c8; border-radius:999px; padding:3px 12px; font-size:13px; margin:8px 0 18px; }
+  #drop{ border:2.5px dashed #d8c193; border-radius:18px; background:#fffdf6; padding:44px 20px; text-align:center; cursor:pointer; transition:.15s; }
+  #drop:hover, #drop.over{ border-color:var(--red); background:#fff3ec; }
+  #drop .big{ font-size:20px; font-weight:700; }
+  #drop .small{ color:var(--mut); font-size:13px; margin-top:8px; line-height:1.8; }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  button{ font:inherit; border:0; border-radius:12px; padding:12px 20px; cursor:pointer; font-weight:700; }
+  .btn-main{ background:var(--red); color:#fff; }
+  .btn-ghost{ background:#fff; border:1.5px solid var(--line); color:var(--ink); }
+  details{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 18px; margin-top:14px; }
+  summary{ font-weight:700; cursor:pointer; }
+  details ol{ margin:10px 0 4px; padding-left:20px; line-height:2; font-size:14px; color:#4c463c; }
+  #err{ display:none; background:#fdecea; color:#a12; border:1px solid #f3c1bb; border-radius:12px; padding:12px 16px; margin-top:16px; font-size:14px; }
+  #result{ display:none; margin-top:26px; }
+  .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .stat{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px; }
+  .stat .k{ color:var(--mut); font-size:13px; }
+  .stat .v{ font-size:30px; font-weight:800; margin-top:6px; }
+  .stat .v.red{ color:var(--red); }
+  .stat .d{ color:var(--mut); font-size:12px; margin-top:4px; line-height:1.6; }
+  table{ width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; margin-top:14px; font-size:14px; }
+  th,td{ padding:11px 12px; text-align:left; border-bottom:1px solid #f0e7d2; vertical-align:top; }
+  th{ background:#fdf3da; font-size:13px; }
+  tr:last-child td{ border-bottom:0; }
+  .flag{ display:inline-block; background:#fdecea; color:#b3271a; border-radius:6px; padding:1px 7px; font-size:12px; margin:1px 2px 1px 0; }
+  .flag.gray{ background:#f1ead9; color:#6d6350; }
+  .howto{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px 18px; margin-top:14px; font-size:14px; line-height:1.9; }
+  .howto b{ color:var(--red); }
+  #cardBox{ margin-top:20px; text-align:center; }
+  #card{ width:min(360px,90vw); border-radius:14px; box-shadow:0 8px 30px rgba(90,60,0,.18); }
+  .foot{ color:var(--mut); font-size:12.5px; line-height:1.9; margin-top:30px; border-top:1px solid var(--line); padding-top:14px; }
+  @media (max-width:640px){ .stats{ grid-template-columns:1fr; } h1{ font-size:27px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>订阅<span class="red">漏钱</span>体检</h1>
+  <p class="sub">视频会员开了两个？网盘续了三年没打开过？音乐 App 早卸载了还在扣？<br>把账单拖进来，算算你的自动续费一年到底漏了多少钱。</p>
+  <span class="privacy">🔒 账单只在你自己的浏览器里解析，不上传、不联网、我们看不到</span>
+
+  <div id="drop">
+    <div class="big">把微信 / 支付宝账单（.csv）拖到这里</div>
+    <div class="small">或点击选择文件，可多选（比如微信 + 支付宝各一份）<br>压缩包（.zip）请先在电脑上解压，再拖里面的 .csv；解压密码在「微信支付」公众号的消息里</div>
+  </div>
+  <input type="file" id="file" accept=".csv,text/csv" multiple hidden>
+  <div class="row">
+    <button class="btn-main" id="pick">选择账单文件</button>
+    <button class="btn-ghost" id="demo">没有账单？先用示例账单看效果</button>
+  </div>
+
+  <details>
+    <summary>账单怎么导出？（微信 / 支付宝各 1 分钟）</summary>
+    <ol>
+      <li><b>微信</b>：关注「微信支付」公众号 → 底部菜单「我的账单」→「账单下载」→ 用途选「个人对账」→ 选时间段 → 邮箱收到带密码的压缩包，密码在公众号消息里 → 电脑上解压出 .csv</li>
+      <li><b>支付宝</b>：电脑打开支付宝官网登录 →「交易记录」→「下载账单」选 .csv 格式；或 App 内「账单」页右上角申请开具交易流水证明</li>
+      <li>时间段建议选满 12 个月，扣得越久越看得出规律</li>
+    </ol>
+  </details>
+
+  <div id="err"></div>
+
+  <div id="result">
+    <div class="stats">
+      <div class="stat"><div class="k">识别出的自动续费</div><div class="v" id="stCount">–</div><div class="d">按固定周期重复扣款识别，含月付与年付</div></div>
+      <div class="stat"><div class="k">持续扣费总额（账单期）</div><div class="v" id="stAll">–</div><div class="d">所有订阅加起来已经扣掉的钱</div></div>
+      <div class="stat"><div class="k">疑似漏钱</div><div class="v red" id="stSuspect">–</div><div class="d">同品类重复订阅 + 悄悄涨价多收的部分（估算，请逐条确认）</div></div>
+    </div>
+
+    <table>
+      <thead><tr><th>订阅</th><th>品类</th><th>扣了多久</th><th>累计</th><th>标记</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+
+    <div class="howto">
+      <b>确认不用了，去哪关？</b><br>
+      微信扣的：微信「我 → 服务 → 钱包 → 支付设置 → 自动续费」逐个关闭<br>
+      支付宝扣的：支付宝「我的 → 设置 → 支付设置 → 免密支付/自动扣款」逐个关闭<br>
+      苹果扣的：iPhone「设置 → 你的名字 → 订阅」里取消<br>
+      本工具只看账单、做体检，不替你取消任何订阅——关之前看清楚，别把在用的也关了
+    </div>
+
+    <div id="cardBox">
+      <p class="sub">把结果做成一张卡，晒给朋友提醒他们也查一查 👇</p>
+      <canvas id="card" width="1080" height="1440"></canvas>
+      <div class="row" style="justify-content:center">
+        <button class="btn-main" id="dlCard">下载报告卡</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="foot">
+    口径说明：「疑似漏钱」= 同一品类的重复订阅（保留最近单价最高的一个，其余计入）+ 涨价后每笔多收的差价累加，是估算值，不是定性结论，最终以你逐条确认为准。识别基于账单内固定周期重复扣款，个别一次性消费可能被误判，请以标记为参考。<br>
+    开源项目 sub-leak-check · 全部计算在本地完成 · 示例账单为虚构数据
+  </p>
+</div>
+<script src="core.js"></script>
+<script src="demo-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
