@@ -39,3 +39,39 @@ page{ background:#f6faf8; color:#1d2b26; font-family:-apple-system,"PingFang SC"
 .hint{ color:#6b7d75; font-size:24rpx; line-height:1.8; margin-top:16rpx; }
 .warn{ background:#fdecea; border:1rpx solid #f0c4bd; color:#8f2b1e; border-radius:16rpx; padding:20rpx 24rpx; font-size:27rpx; font-weight:600; margin-top:18rpx; line-height:1.8; }
 .foot{ color:#6b7d75; font-size:23rpx; line-height:1.9; margin-top:30rpx; border-top:1rpx solid #dce8e2; padding-top:16rpx; }
+.checklist{ border-color:#b9ddd1; background:#fbfffd; }
+.checknums{ display:flex; flex-wrap:wrap; gap:10rpx; margin:12rpx 0; }
+.checknums text{ background:#e7f4ef; color:#0b5a54; border-radius:999rpx; padding:5rpx 16rpx; font-size:23rpx; font-weight:600; }
+.bl.strong{ color:#0f766e; font-weight:700; }
+.note{ color:#6b7d75; font-size:23rpx; line-height:1.75; margin-top:10rpx; }
+.btn.smallbtn{ font-size:24rpx; margin-top:14rpx; padding:0; }
+.listhead{ font-size:34rpx; font-weight:800; margin:30rpx 2rpx 14rpx; }
+.listhint{ font-size:23rpx; color:#6b7d75; font-weight:400; margin-left:10rpx; }
+.subcard{ background:#fff; border:1rpx solid #dce8e2; border-radius:20rpx; padding:22rpx 24rpx; margin-top:16rpx; }
+.subhead{ display:flex; align-items:flex-start; }
+.confidence{ display:inline-block; border-radius:8rpx; padding:2rpx 12rpx; font-size:22rpx; margin:2rpx 8rpx 2rpx 0; font-weight:700; }
+.confidence.likely{ background:#e7f4ef; color:#0b5a54; }
+.confidence.suspected{ background:#fff4d6; color:#856404; }
+.submeta{ display:flex; flex-wrap:wrap; gap:10rpx 18rpx; color:#3d4f47; font-size:23rpx; margin-top:16rpx; padding-top:14rpx; border-top:1rpx solid #eef3f0; }
+.detailbtn{ background:#eef6f2; color:#0b5a54; border-radius:12rpx; font-size:25rpx; font-weight:700; margin-top:16rpx; }
+.detail{ border-top:1rpx solid #eef3f0; margin-top:18rpx; padding-top:18rpx; }
+.reason{ background:#f6faf8; border-radius:12rpx; padding:14rpx 16rpx; font-size:24rpx; line-height:1.7; color:#3d4f47; }
+.dgrid{ display:flex; flex-wrap:wrap; margin-top:14rpx; }
+.dgrid view{ width:50%; box-sizing:border-box; padding:8rpx 0; }
+.dk{ display:block; color:#6b7d75; font-size:22rpx; }
+.dv{ display:block; font-size:26rpx; font-weight:700; margin-top:3rpx; }
+.cancelhint{ font-size:24rpx; line-height:1.7; color:#0b5a54; background:#e7f4ef; border-radius:12rpx; padding:12rpx 16rpx; margin-top:12rpx; }
+.statusrow{ margin-top:18rpx; }
+.statuslabel{ font-size:25rpx; font-weight:700; margin-bottom:10rpx; }
+.seg{ display:flex; flex-wrap:wrap; gap:10rpx; }
+.segbtn{ border:1rpx solid #c9d8d1; color:#3d4f47; background:#fff; border-radius:999rpx; padding:7rpx 18rpx; font-size:23rpx; }
+.segbtn.active{ background:#0f766e; border-color:#0f766e; color:#fff; font-weight:700; }
+.segbtn.active.done{ background:#2e7d32; border-color:#2e7d32; }
+.chargetitle{ font-size:26rpx; font-weight:800; margin-top:22rpx; }
+.charge{ display:flex; align-items:flex-start; padding:13rpx 0; border-bottom:1rpx solid #eef3f0; }
+.cdate{ width:150rpx; color:#6b7d75; font-size:23rpx; padding-top:3rpx; }
+.cmain{ flex:1; min-width:0; font-size:24rpx; line-height:1.45; }
+.csource{ color:#6b7d75; font-size:21rpx; margin-top:2rpx; }
+.camount{ width:130rpx; text-align:right; font-weight:700; font-size:25rpx; }
+.btn.danger{ background:#fff; color:#b3271a; border:1.5px solid #e5aaa3; font-size:25rpx; }
+.empty{ color:#6b7d75; font-size:26rpx; line-height:1.8; }

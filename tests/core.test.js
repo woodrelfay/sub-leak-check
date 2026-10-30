@@ -50,4 +50,27 @@ assert.strictEqual(oneOff.ok, true);
 const r4 = SL.detectSubscriptions(oneOff.txns);
 assert.strictEqual(r4.subCount, 0, "同额两笔餐饮不算订阅（不足3个月且非词典商户）");
 
+// 5) 高频零碎按单消费不能被误判成订阅；同额高频仍保留
+function mkTxns(counterparty, amounts, startDay, stepDays) {
+  return amounts.map(function (amt, i) {
+    var d = new Date(2026, 6, startDay + i * stepDays);
+    return { date: d, counterparty: counterparty, product: "/", direction: "out", amount: amt, source: "alipay" };
+  });
+}
+var meituanLike = [];
+for (var i = 0; i < 46; i++) meituanLike.push(3 + (i % 11)); // 每 2 天一笔，金额 3~13 元零碎
+const r5a = SL.detectSubscriptions(mkTxns("美团", meituanLike, 29, 2));
+assert.ok(!r5a.subscriptions.some(s => s.name.includes("美团")), "美团神券式高频零碎消费不再算订阅");
+const twiceMonthly = SL.detectSubscriptions(mkTxns("美团", [30, 30, 30, 30, 30, 30], 1, 15));
+assert.ok(twiceMonthly.subscriptions.some(s => s.name.includes("美团")), "每月两次同额扣费仍保留为月度多次");
+
+// 6) 详情与关闭清单所需的核心字段
+assert.ok(youku.charges.length === youku.count, "订阅详情包含逐笔扣款");
+assert.strictEqual(youku.annualCost, 360, "月付按最近一次金额估算年支出");
+assert.ok(youku.nextChargeDate instanceof Date, "应估算下一次扣费日期");
+assert.ok(youku.intervalDays >= 24 && youku.intervalDays <= 42, "月付周期应在合理范围");
+assert.ok(youku.confidenceLabel.length > 0 && youku.reason.length > 0, "应给出置信度与判断原因");
+assert.ok(youku.cancelHint.length > 0, "应给出关闭路径提示");
+assert.strictEqual(SL.groupKeyForTxn(wx.txns.find(t => t.counterparty.includes("优酷"))), "dict:优酷 VIP", "分组键应与识别结果一致");
+
 console.log("all tests passed");

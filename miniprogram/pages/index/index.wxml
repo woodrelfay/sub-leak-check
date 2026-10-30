@@ -16,22 +16,75 @@
 <view class="stat"><view class="k">疑似多扣（请逐条确认）</view><view class="v red">{{suspectTotal}}</view></view>
 </view>
 
-<view class="table">
-<view class="tr head"><text class="c1">订阅</text><text class="c2">扣了多久</text><text class="c3">累计</text></view>
-<view class="tr" wx:for="{{subs}}" wx:key="name">
+<view wx:if="{{subs.length}}" class="box checklist">
+<view class="bt">关闭清单</view>
+<view class="checknums">
+<text>待确认 {{pendingCount}}</text><text>还在用 {{keepCount}}</text><text>准备关闭 {{plannedCount}}</text><text>已关闭 {{doneCount}}</text>
+</view>
+<view class="bl">准备关闭的项目，按当前周期估算每年约 {{plannedAnnual}}</view>
+<view class="bl strong">已关闭的项目，按当前周期估算每年约少扣 {{doneAnnual}}</view>
+<view class="note">状态只保留在当前页面，不上传、不保存到服务器；关闭小程序后会清空。下次扣费日期是按历史间隔估算，不是平台的官方扣费通知。</view>
+<button wx:if="{{excludedCount}}" class="btn ghost smallbtn" bindtap="restoreExcluded">已移出 {{excludedCount}} 组扣款，点此恢复并重算</button>
+</view>
+
+<view class="listhead">订阅明细 <text class="listhint">点开可看每一笔扣款</text></view>
+<view wx:if="{{!subs.length}}" class="box empty">没识别出固定周期扣款——账单时间段建议满 6 个月以上；高频零碎的按单消费不会算作订阅。</view>
+
+<view class="subcard" wx:for="{{subs}}" wx:key="key">
+<view class="subhead">
 <view class="c1">
 <view class="nm">{{item.name}}</view>
 <view class="lt">最近一次 {{item.lastText}} · {{item.category}}</view>
-<view class="flags"><text wx:for="{{item.flags}}" wx:for-item="f" wx:key="text" class="flag {{f.gray?'gray':''}}">{{f.text}}</text></view>
+<view class="flags">
+<text class="confidence {{item.confidenceClass}}">{{item.confidenceLabel}}</text>
+<text wx:for="{{item.flags}}" wx:for-item="f" wx:key="text" class="flag {{f.gray?'gray':''}}">{{f.text}}</text>
 </view>
-<text class="c2">{{item.cadence}} · {{item.count}} 笔\n{{item.monthCount}} 个月</text>
-<text class="c3">{{item.total}}</text>
 </view>
-<view wx:if="{{!subs.length}}" class="tr"><text class="c1">没识别出固定周期扣款——账单时间段建议满 6 个月以上</text></view>
+<view class="c2">{{item.cadence}} · {{item.count}} 笔
+{{item.monthCount}} 个月</view>
+<view class="c3">{{item.total}}</view>
+</view>
+
+<view class="submeta">
+<text>估算月均 {{item.monthlyText}}</text><text>估算年支出 {{item.annualText}}</text><text>状态：{{item.statusLabel}}</text>
+</view>
+<button class="detailbtn" data-key="{{item.key}}" bindtap="toggleDetail">{{item.expanded? '收起明细': '查看逐笔明细'}}</button>
+
+<view wx:if="{{item.expanded}}" class="detail">
+<view class="reason">为什么列入：{{item.reason}}</view>
+<view class="dgrid">
+<view><text class="dk">首次扣费</text><text class="dv">{{item.firstText}}</text></view>
+<view><text class="dk">最近扣费</text><text class="dv">{{item.lastDateText}}</text></view>
+<view><text class="dk">历史间隔</text><text class="dv">{{item.intervalText}}</text></view>
+<view><text class="dk">周期估算下次</text><text class="dv">{{item.nextText}}</text></view>
+</view>
+<view class="cancelhint">去哪关：{{item.cancelHint}}</view>
+
+<view class="statusrow">
+<view class="statuslabel">这项怎么处理？</view>
+<view class="seg">
+<view class="segbtn {{item.status==='pending'?'active':''}}" data-key="{{item.key}}" data-status="pending" bindtap="setStatus">待确认</view>
+<view class="segbtn {{item.status==='keep'?'active':''}}" data-key="{{item.key}}" data-status="keep" bindtap="setStatus">还在用</view>
+<view class="segbtn {{item.status==='planned'?'active':''}}" data-key="{{item.key}}" data-status="planned" bindtap="setStatus">准备关闭</view>
+<view class="segbtn {{item.status==='done'?'active done':''}}" data-key="{{item.key}}" data-status="done" bindtap="setStatus">已关闭</view>
+</view>
+</view>
+
+<view class="chargetitle">逐笔扣款（从新到旧）</view>
+<view class="charge" wx:for="{{item.charges}}" wx:for-item="c" wx:key="id">
+<text class="cdate">{{c.dateText}}</text>
+<view class="cmain"><view>{{c.label}}</view><view class="csource">{{c.sourceText}}</view></view>
+<text class="camount">{{c.amountText}}</text>
+</view>
+
+<button class="btn danger" data-key="{{item.key}}" bindtap="markNotSubscription">这不是订阅，移出报告</button>
+<view class="note">移出后只在本次计算中排除这组扣款，不会修改你的原始账单。</view>
+</view>
 </view>
 
 <view class="box">
 <view class="bt">确认不用了，去哪关？</view>
+<view class="bl">每个订阅展开明细后，会根据账单来源给出对应的关闭路径。</view>
 <view class="bl">微信扣的：微信「我 → 服务 → 钱包 → 支付设置 → 自动续费」逐个关闭</view>
 <view class="bl">支付宝扣的：支付宝「我的 → 设置 → 支付设置 → 免密支付/自动扣款」逐个关闭</view>
 <view class="bl">苹果扣的：iPhone「设置 → 你的名字 → 订阅」里取消</view>
@@ -63,5 +116,5 @@
 <view class="bl">「会做梦的服务器」——一个做运营的，被自动续费教育过，写了这个工具自查自纠并开源。识别不出的订阅欢迎到 GitHub 仓库提 Issue，词典持续补。</view>
 </view>
 
-<view class="foot">口径说明：「疑似多扣」= 同品类重复订阅（保留最近单价最高的一个）+ 涨价多收差价的估算，请逐条确认后再关。示例账单为虚构数据。sub-leak-check · MIT 开源</view>
+<view class="foot">口径说明：「疑似多扣」= 同品类重复订阅（保留最近单价最高的一个）+ 涨价多收差价的估算，请逐条确认后再关。置信度和下次扣费日期均为本地规则估算。示例账单为虚构数据。sub-leak-check · MIT 开源</view>
 </view>
